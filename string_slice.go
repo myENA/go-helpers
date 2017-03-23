@@ -1,4 +1,4 @@
-package gohelpers
+package helpers
 
 import "strings"
 

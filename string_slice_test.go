@@ -1,14 +1,15 @@
-package gohelpers_test
+package helpers_test
 
 import (
-	"github.com/myENA/go-helpers"
 	"testing"
+
+	"github.com/myENA/go-helpers"
 )
 
 func TestCleanStringSlice(t *testing.T) {
 	s := []string{"ok", " extralead", "extrafollow ", "       "}
 	expected := []string{"ok", "extralead", "extrafollow"}
-	cleaned := gohelpers.CleanStringSlice(s)
+	cleaned := helpers.CleanStringSlice(s)
 	t.Run("Length Test", func(t *testing.T) {
 		if len(expected) != len(cleaned) {
 			t.Logf("Expected \"%d\", saw \"%d\"", len(expected), len(cleaned))
@@ -26,7 +27,7 @@ func TestCleanStringSlice(t *testing.T) {
 func TestUniqueStringSlice(t *testing.T) {
 	s := []string{"ok", "dupe1", "dupe2", "     dupe2", "dupe1 ", "ok2"}
 	expected := []string{"ok", "dupe1", "dupe2", "ok2"}
-	unique := gohelpers.UniqueStringSlice(s)
+	unique := helpers.UniqueStringSlice(s)
 	t.Run("Length Test", func(t *testing.T) {
 		if len(expected) != len(unique) {
 			t.Logf("Expected \"%d\", saw \"%d\"", len(expected), len(unique))
@@ -45,7 +46,7 @@ func TestCombineStringSlices(t *testing.T) {
 	s1 := []string{"ok", "ok", "val1", "val2", "      val3"}
 	s2 := []string{"ok2", "ok", "val3", "val2"}
 	expected := []string{"ok", "val1", "val2", "val3", "ok2"}
-	combined, additions := gohelpers.CombineStringSlices(s1, s2)
+	combined, additions := helpers.CombineStringSlices(s1, s2)
 	t.Run("Length Test", func(t *testing.T) {
 		if len(expected) != len(combined) {
 			t.Logf("Expected \"%d\", saw \"%d\"", len(expected), len(combined))
@@ -70,7 +71,7 @@ func TestRemoveStringsFromSlice(t *testing.T) {
 	root := []string{"ok", "removeme1", "removeme2", "ok2"}
 	remove := []string{"removeme1", "removeme2"}
 	expected := []string{"ok", "ok2"}
-	removed, removedCount := gohelpers.RemoveStringsFromSlice(root, remove)
+	removed, removedCount := helpers.RemoveStringsFromSlice(root, remove)
 	t.Run("Length Test", func(t *testing.T) {
 		if len(expected) != len(removed) {
 			t.Logf("Expected \"%d\", saw \"%d\"", len(expected), len(removed))
