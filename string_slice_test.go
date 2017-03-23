@@ -1,4 +1,4 @@
-package gohelpers_test
+package helpers_test
 
 import (
 	"github.com/myENA/go-helpers"
