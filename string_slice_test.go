@@ -91,3 +91,15 @@ func TestRemoveStringsFromSlice(t *testing.T) {
 		}
 	})
 }
+
+func TestRemoveStringsFromSliceReturnsNewSlice(t *testing.T) {
+	root := []string{"ok", "removeme1", "removeme2", "ok2"}
+	removed, _ := helpers.RemoveStringsFromSlice(root, nil)
+	root[0] = "nope"
+	t.Run("removed is not root", func(t *testing.T) {
+		if "ok" != removed[0] {
+			t.Logf("Expected \"removed[0]\" to be \"ok\", saw \"%s\"", removed[0])
+			t.FailNow()
+		}
+	})
+}

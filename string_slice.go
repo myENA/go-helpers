@@ -7,16 +7,15 @@ import "strings"
 func CleanStringSlice(in []string) (out []string) {
 	var inVal, outVal string
 
-	if nil == in {
-		out = make([]string, 0)
-	} else if 0 == len(in) {
-		out = in
-	} else {
-		for _, inVal = range in {
-			outVal = strings.TrimSpace(inVal)
-			if "" != outVal {
-				out = append(out, outVal)
-			}
+	// if in nil or empty...
+	if nil == in || 0 == len(in) {
+		return
+	}
+
+	for _, inVal = range in {
+		outVal = strings.TrimSpace(inVal)
+		if "" != outVal {
+			out = append(out, outVal)
 		}
 	}
 
@@ -28,27 +27,26 @@ func CleanStringSlice(in []string) (out []string) {
 func UniqueStringSlice(in []string) (out []string) {
 	var inVal, outVal string
 
-	if nil == in {
-		out = make([]string, 0)
-	} else if 0 == len(in) {
-		out = in
-	} else {
-	UniqueLoop:
-		for _, inVal = range in {
-			// see if empty, but don't change values for non-empty
-			inVal = strings.TrimSpace(inVal)
-			if "" == inVal {
+	// if in nil or empty...
+	if nil == in || 0 == len(in) {
+		return
+	}
+
+UniqueLoop:
+	for _, inVal = range in {
+		// see if empty, but don't change values for non-empty
+		inVal = strings.TrimSpace(inVal)
+		if "" == inVal {
+			continue UniqueLoop
+		}
+
+		for _, outVal = range out {
+			if outVal == inVal {
 				continue UniqueLoop
 			}
-
-			for _, outVal = range out {
-				if outVal == inVal {
-					continue UniqueLoop
-				}
-			}
-
-			out = append(out, inVal)
 		}
+
+		out = append(out, inVal)
 	}
 
 	return
@@ -56,32 +54,33 @@ func UniqueStringSlice(in []string) (out []string) {
 
 // CombineStringSlices takes 1..* string arrays and combines them into a single slice.
 // This will also unique and strip "empty" values out, so y'know...there you go.
-func CombineStringSlices(ins ...[]string) (out []string, additions int) {
+func CombineStringSlices(ins ...[]string) (out []string, delta int) {
 	var i int
 	var in []string
 	var inVal, outVal string
 
+	// if there was no input...
 	if 0 == len(ins) {
-		out = make([]string, 0)
-	} else {
-		for i, in = range ins {
-			// if "empty", just move on
-			if nil == in || 0 == len(in) {
-				continue
+		return
+	}
+
+	for i, in = range ins {
+		// if "empty", just move on
+		if nil == in || 0 == len(in) {
+			continue
+		}
+
+	ValueLoop:
+		for _, inVal = range UniqueStringSlice(in) {
+			for _, outVal = range out {
+				if outVal == inVal {
+					continue ValueLoop
+				}
 			}
 
-		ValueLoop:
-			for _, inVal = range UniqueStringSlice(in) {
-				for _, outVal = range out {
-					if outVal == inVal {
-						continue ValueLoop
-					}
-				}
-
-				out = append(out, inVal)
-				if 0 < i {
-					additions++
-				}
+			out = append(out, inVal)
+			if 0 < i {
+				delta++
 			}
 		}
 	}
@@ -90,24 +89,30 @@ func CombineStringSlices(ins ...[]string) (out []string, additions int) {
 }
 
 // RemoveStringsFromSlice will attempt to remove values present in "remove" from "root"
-func RemoveStringsFromSlice(root, remove []string) (out []string, removed int) {
+func RemoveStringsFromSlice(root, remove []string) (out []string, delta int) {
 	var rootVal, removeVal string
 
+	// if root is nil, just return.
 	if nil == root {
-		out = make([]string, 0)
-	} else if 0 == len(remove) {
-		out = root
-	} else {
-	RootLoop:
-		for _, rootVal = range root {
-			for _, removeVal = range remove {
-				if rootVal == removeVal {
-					removed++
-					continue RootLoop
-				}
+		return
+	}
+
+	// if remove list empty, copy root to out
+	if nil == remove || 0 == len(remove) {
+		out = make([]string, len(root))
+		copy(out, root)
+		return
+	}
+
+RootLoop:
+	for _, rootVal = range root {
+		for _, removeVal = range remove {
+			if rootVal == removeVal {
+				delta++
+				continue RootLoop
 			}
-			out = append(out, rootVal)
 		}
+		out = append(out, rootVal)
 	}
 
 	return
