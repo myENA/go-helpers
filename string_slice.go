@@ -1,6 +1,9 @@
 package helpers
 
-import "strings"
+import (
+	"strings"
+	"sort"
+)
 
 // CleanStringSlice takes an input and will attempt to "clean" the input by removing "empty" or "whitespace-only"
 // values.  You will always get a []string response, even if you pass in a nil
@@ -116,4 +119,24 @@ RootLoop:
 	}
 
 	return
+}
+
+// StringSlicesEqual will attempt to determine if both provided string slices contain the same values.  The original
+// slices are not modified.
+func StringSlicesEqual(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	ac := make([]string, len(a))
+	bc := make([]string, len(b))
+	copy(ac, a)
+	copy(bc, b)
+	sort.Strings(ac)
+	sort.Strings(bc)
+	for i, v := range ac {
+		if bc[i] != v {
+			return false
+		}
+	}
+	return true
 }
