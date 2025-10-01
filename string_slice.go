@@ -1,8 +1,8 @@
 package helpers
 
 import (
-	"strings"
 	"sort"
+	"strings"
 )
 
 // CleanStringSlice takes an input and will attempt to "clean" the input by removing "empty" or "whitespace-only"
