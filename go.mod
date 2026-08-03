@@ -1,3 +1,3 @@
 module github.com/myENA/go-helpers
 
-go 1.25.1
+go 1.26.5
